@@ -29,5 +29,5 @@ func createLocalDir(localDir string, comparison SftpComparison) {
 }
 
 func CompareFiles(firstFilePath string, secondFilePath string) bool {
-	return true
+	return false
 }

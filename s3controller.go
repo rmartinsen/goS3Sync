@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bytes"
 	"log"
+	"net/http"
 	"os"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -80,8 +82,23 @@ func UploadS3File(localPath string, bucket string, key string) {
 	}
 	defer file.Close()
 
+	fileInfo, _ := file.Stat()
+	var size int64 = fileInfo.Size()
+	buffer := make([]byte, size)
+
+	file.Read(buffer)
+	fileBytes := bytes.NewReader(buffer)
+	fileType := http.DetectContentType(buffer)
+
 	_, err = s3.New(sess).PutObject(&s3.PutObjectInput{
-		Bucket: aws.String(bucket),
-		Key:    aws.String(key),
+		Bucket:      aws.String(bucket),
+		Key:         aws.String(key),
+		Body:        fileBytes,
+		ContentType: aws.String(fileType),
 	})
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	println("File uploaded from " + localPath + "to: " + bucket + key)
 }
