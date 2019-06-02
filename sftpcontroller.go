@@ -3,20 +3,13 @@ package main
 import (
 	"log"
 	"os"
+	"strings"
 
 	"github.com/pkg/sftp"
 	"golang.org/x/crypto/ssh"
 )
 
-func main() {
-	comparisons := GetSftpComparisons()
-	println(comparisons)
-	for _, comparison := range comparisons {
-		getSFTPFile(comparison)
-	}
-}
-
-func getSFTPFile(comparison SftpComparison) {
+func getSFTPFile(comparison SftpComparison, localDir string) {
 	config := &ssh.ClientConfig{
 		User: comparison.username,
 		Auth: []ssh.AuthMethod{
@@ -44,7 +37,11 @@ func getSFTPFile(comparison SftpComparison) {
 	}
 	defer source.Close()
 
-	target, err := os.Create("/Users/admin/go/src/github.com/rmartinsen/s3_sync/files/" + comparison.name)
+	splitPath := strings.Split(comparison.sftpPath, "/")
+
+	sftpFileName := splitPath[len(splitPath)-1]
+
+	target, err := os.Create(localDir + comparison.name + "/" + "sftp_" + sftpFileName)
 	if err != nil {
 		log.Fatal(err)
 	}
