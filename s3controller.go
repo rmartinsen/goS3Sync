@@ -3,8 +3,6 @@ package main
 import (
 	"log"
 	"os"
-	"path/filepath"
-	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -18,11 +16,7 @@ func GetS3File(comparison SftpComparison, localPath string) {
 
 	key := getMostRecentKey(bucket, prefix)
 
-	splitKey := strings.Split(key, "/")
-	s3FileName := splitKey[len(splitKey)-1]
-
-	fullLocalPath := filepath.Join(localPath, comparison.name, "s3_"+s3FileName)
-	file, err := os.Create(fullLocalPath)
+	file, err := os.Create(localPath)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -69,4 +63,25 @@ func getMostRecentKey(bucket string, prefix string) string {
 	}
 
 	return maxKey
+}
+
+func UploadS3File(localPath string, bucket string, key string) {
+	sess, err := session.NewSession(&aws.Config{
+		Region: aws.String("us-east-1"),
+	})
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	file, err := os.Open(localPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	_, err = s3.New(sess).PutObject(&s3.PutObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(key),
+	})
 }

@@ -3,13 +3,12 @@ package main
 import (
 	"log"
 	"os"
-	"strings"
 
 	"github.com/pkg/sftp"
 	"golang.org/x/crypto/ssh"
 )
 
-func getSFTPFile(comparison SftpComparison, localDir string) {
+func getSFTPFile(comparison SftpComparison, localPath string) {
 	config := &ssh.ClientConfig{
 		User: comparison.username,
 		Auth: []ssh.AuthMethod{
@@ -37,11 +36,7 @@ func getSFTPFile(comparison SftpComparison, localDir string) {
 	}
 	defer source.Close()
 
-	splitPath := strings.Split(comparison.sftpPath, "/")
-
-	sftpFileName := splitPath[len(splitPath)-1]
-
-	target, err := os.Create(localDir + comparison.name + "/" + "sftp_" + sftpFileName)
+	target, err := os.Create(localPath)
 	if err != nil {
 		log.Fatal(err)
 	}
