@@ -68,6 +68,7 @@ func getMostRecentKey(bucket string, prefix string) string {
 }
 
 func UploadS3File(localPath string, bucket string, key string) {
+	println("Uploading localpath to " + bucket + "/" + key)
 	sess, err := session.NewSession(&aws.Config{
 		Region: aws.String("us-east-1"),
 	})

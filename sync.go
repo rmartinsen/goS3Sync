@@ -22,7 +22,7 @@ func GetSftpComparisons() []SftpComparison {
 
 	diffCompare := SftpComparison{
 		"diff_compare", "localhost", "admin", "admin",
-		"/Users/admin/Documents/test_1",
+		"/Users/admin/Documents/test_2",
 		"compare-test-2", "test", 22}
 
 	results = append(results, sameCompare)
