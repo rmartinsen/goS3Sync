@@ -13,8 +13,8 @@ import (
 )
 
 func GetS3File(comparison SftpComparison, localPath string) {
-	bucket := comparison.s3Bucket
-	prefix := comparison.s3Prefix
+	bucket := comparison.S3Bucket
+	prefix := comparison.S3Prefix
 
 	key := getMostRecentKey(bucket, prefix)
 

@@ -10,9 +10,9 @@ import (
 
 func getSFTPFile(comparison SftpComparison, localPath string) {
 	config := &ssh.ClientConfig{
-		User: comparison.username,
+		User: comparison.Username,
 		Auth: []ssh.AuthMethod{
-			ssh.Password(comparison.password),
+			ssh.Password(comparison.Password),
 		},
 		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
 	}
@@ -30,7 +30,7 @@ func getSFTPFile(comparison SftpComparison, localPath string) {
 	}
 	defer sftp.Close()
 
-	source, err := sftp.Open(comparison.sftpPath)
+	source, err := sftp.Open(comparison.SftpPath)
 	if err != nil {
 		log.Fatal(err)
 	}
